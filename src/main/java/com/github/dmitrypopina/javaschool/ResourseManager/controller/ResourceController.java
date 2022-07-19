@@ -30,7 +30,7 @@ public class ResourceController {
     @GetMapping("{id}")
     public Resource getResource(@PathVariable("id") Resource resource,
                                 @AuthenticationPrincipal User user) {
-        if (user.isAdmin() || (resource.getOwner() == user)) {
+        if (user.isAdmin() || (user.equals(resource.getOwner()))) {
             return resource;
         }
         else {
@@ -41,7 +41,7 @@ public class ResourceController {
     @PostMapping
     public Resource create(@RequestBody Resource resource,
                            @AuthenticationPrincipal User user){
-        if (resource.getOwner() == null || (!user.isAdmin() && resource.getOwner() != user)){
+        if (resource.getOwner() == null || (!user.isAdmin() && !user.equals(resource.getOwner()))){
             resource.setOwner(user);
         }
         return resourceService.save(resource);

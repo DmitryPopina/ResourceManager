@@ -1,5 +1,6 @@
 package com.github.dmitrypopina.javaschool.ResourseManager.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class User implements UserDetails {
 
     @Column(unique = true, nullable = false)
     @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
+    @JsonValue
     private String username;
 
     @Column(unique = true, nullable = false)

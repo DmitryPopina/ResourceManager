@@ -65,15 +65,4 @@ public class UserController {
     public @ResponseBody List<User> getAll() {
         return this.userService.findAll();
     }
-
-    /*@PostMapping
-    public User create(@RequestBody User user){
-        if (userService.findByUsername(user.getUsername()) != null) {
-            throw new RuntimeException(String.format("User name %s already exists", user.getUsername()));
-        } else {
-            User newUser = new User();
-            BeanUtils.copyProperties(user, newUser, "id");
-            return userService.save(newUser);
-        }
-    }*/
 }
