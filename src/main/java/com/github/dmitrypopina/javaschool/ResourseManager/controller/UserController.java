@@ -42,7 +42,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/public/signUp")
-    public ResponseEntity<User> signUp(HttpServletRequest requestHeader, @RequestBody SignUpRequest request, @AuthenticationPrincipal User creator) throws RuntimeException {
+    public ResponseEntity<User> signUp(HttpServletRequest requestHeader,
+                                       @RequestBody SignUpRequest request,
+                                       @AuthenticationPrincipal User creator) throws RuntimeException {
 
         User user;
         user = userService.signUp(request);

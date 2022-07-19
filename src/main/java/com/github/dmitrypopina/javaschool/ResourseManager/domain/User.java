@@ -38,7 +38,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(role);
+        return getRoles();
     }
 
     @Override
@@ -65,4 +65,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isAdmin() {return this.role == UserRole.ROLE_ADMIN;}
 }
