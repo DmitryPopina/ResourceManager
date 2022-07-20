@@ -3,9 +3,11 @@ package com.github.dmitrypopina.javaschool.ResourseManager.controller;
 import com.github.dmitrypopina.javaschool.ResourseManager.domain.Resource;
 import com.github.dmitrypopina.javaschool.ResourseManager.domain.User;
 import com.github.dmitrypopina.javaschool.ResourseManager.domain.UserRole;
+import com.github.dmitrypopina.javaschool.ResourseManager.exception.CustomException;
 import com.github.dmitrypopina.javaschool.ResourseManager.service.ResourceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +30,8 @@ public class ResourceController {
     }
 
     @GetMapping("{id}")
-    public Resource getResource(@PathVariable("id") Resource resource,
-                                @AuthenticationPrincipal User user) {
-        if (user.isAdmin() || (user.equals(resource.getOwner()))) {
-            return resource;
-        }
-        else {
-            return null;
-        }
+    public Resource getResource(@PathVariable("id") Resource resource) {
+        return resource;
     }
 
     @PostMapping
@@ -50,14 +46,28 @@ public class ResourceController {
     @PutMapping("{id}")
     public Resource update(
             @PathVariable("id") Resource resourceFromDb,
-            @RequestBody Resource resource
+            @RequestBody Resource resource,
+            @AuthenticationPrincipal User user
     ){
-        BeanUtils.copyProperties(resource, resourceFromDb, "id");
-        return resourceService.save(resourceFromDb);
+        if (user.isAdmin()  || (!user.isAdmin() && !user.equals(resource.getOwner()))){
+            BeanUtils.copyProperties(resource, resourceFromDb, "id");
+            return resourceService.save(resourceFromDb);
+        }
+        else
+        {
+            throw new CustomException("Eou can't modify not your resource", HttpStatus.FORBIDDEN);
+        }
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Resource resource){
-        resourceService.delete(resource);
+    public void delete(@PathVariable("id") Resource resource,
+                       @AuthenticationPrincipal User user){
+        if (user.isAdmin()  || (!user.isAdmin() && !user.equals(resource.getOwner()))){
+            resourceService.delete(resource);
+        }
+        else
+        {
+            throw new CustomException("You can't delete not your resource", HttpStatus.FORBIDDEN);
+        }
     }
 }
