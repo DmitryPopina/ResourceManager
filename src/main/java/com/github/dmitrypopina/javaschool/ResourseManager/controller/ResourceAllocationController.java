@@ -61,13 +61,12 @@ public class ResourceAllocationController {
     Админ может назначить кого угодно.
     Владелец ресурса может назначить кого угодно
     Просто пользователь может только назначить себя
-    Или снять
      */
-    @PutMapping("{resource}/allocation/{id}/{userid}")
+    @PutMapping("{resource}/allocate/{id}/{userid}")
     public ResourceAllocation allocate(@PathVariable Resource resource,
                                        @PathVariable("id") ResourceAllocation allocation,
                                        @AuthenticationPrincipal User user,
-                                       @PathVariable(name = "userid", required = false) User userToAllocate){
+                                       @PathVariable(name = "userid") User userToAllocate){
         if (user.isAdmin() || user.equals(resource.getOwner())) {
             allocation.setUser(userToAllocate);
         }else {
@@ -75,5 +74,20 @@ public class ResourceAllocationController {
         }
         return resourceAllocationService.save(allocation);
     }
-
+    /*
+    Админ может освободить любую аллокацию.
+    Владелец ресурса тоже
+    Просто пользователь освободить только свою бронь
+     */
+    @PutMapping("{resource}/deallocate/{id}")
+    public ResourceAllocation deallocate(@PathVariable Resource resource,
+                                       @PathVariable("id") ResourceAllocation allocation,
+                                       @AuthenticationPrincipal User user){
+        if (user.isAdmin() || user.equals(resource.getOwner()) || user.equals(allocation.getUser())) {
+            allocation.setUser(null);
+        }else {
+            throw new CustomException("You can't modify not your allocation", HttpStatus.FORBIDDEN);
+        }
+        return resourceAllocationService.save(allocation);
+    }
 }

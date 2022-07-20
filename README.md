@@ -11,8 +11,8 @@ or user: <br>
 "password": "pass",
 "username": "user1"
 }
- Then, paste token to Authorisation header in this way: <br>
-Bearer 'token' <br>
+Then, paste token to Authorisation header in this way: <br>
+Bearer 'token' <br><br>
 Then you can: <br>
 List Users: GET http://localhost:8080/users/ <br>
 Add new User: POST http://localhost:8080/users/public/signUp 
@@ -35,7 +35,7 @@ Update Resource: PUT  http://localhost:8080/resource/{id resource}
 "id": 1,
 "name": "resource11",
 "owner": 2
-} <br>
+} <br><br>
 List Resource Allocations: GET http://localhost:8080/resource-allocations/ <br>
 Add new Allocation: POST http://localhost:8080/resource-allocations/
 {
@@ -43,5 +43,6 @@ Add new Allocation: POST http://localhost:8080/resource-allocations/
 "allocationDate": "20.07.2022",
 "allocationStartTime": "10:00:00",
 "allocationEndTime": "11:00:00"
-}
-
+}<br><br>
+Take allocation: PUT http://localhost:8080/resource-allocations/{resource}/allocate/{allocation}/{user} <br>
+Free allocation: PUT http://localhost:8080/resource-allocations/{resource}/deallocate/{allocation}/
